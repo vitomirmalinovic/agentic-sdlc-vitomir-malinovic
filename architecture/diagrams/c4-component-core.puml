@@ -1,0 +1,17 @@
+@startuml c4-component-core
+!include <C4/C4_Component>
+title Component Diagram - Domain Core
+
+Container_Boundary(core, "Domain Core") {
+  Component(grid, "Grid", "Python module", "Immutable 2D cell grid value object: dimensions + cell values")
+  Component(generator, "BoardGenerator", "Python module", "Builds a mine layout from rows, cols, mine count and an injected seed")
+  Component(hints, "HintComputer", "Python module", "Computes 8-neighbour mine counts from a mine layout (the base kata)")
+  Component(state, "GameState", "Python module", "Immutable game state: board + hints + per-cell visibility + status")
+  Component(engine, "GameEngine", "Python module", "Applies reveal/flag actions with flood-fill; detects win/lose")
+}
+
+Rel(generator, grid, "Produces mine layout")
+Rel(hints, grid, "Reads mine layout, produces hint grid")
+Rel(state, grid, "Contains board + hints")
+Rel(engine, state, "Reads input state, returns next state")
+@enduml

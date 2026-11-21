@@ -1,0 +1,22 @@
+@startuml seq-reveal-mine-lose
+title Scenario: Reveal a Mine - Lose
+
+actor Player
+participant "GameLoop" as Loop
+participant "CommandParser" as Parser
+participant "GameEngine" as Engine
+participant "Renderer" as Render
+
+Player -> Loop: "r 1 1"
+Loop -> Parser: parse("r 1 1")
+Parser --> Loop: Reveal(1, 1)
+Loop -> Engine: apply(GameState, Reveal(1, 1))
+note right of Engine
+  cell is a mine
+  status -> lost, reveal all mines
+end note
+Engine --> Loop: next GameState (lost, all mines shown)
+Loop -> Render: render(GameState)
+Render --> Loop: text grid (full board)
+Loop -> Player: "You lost" + restart/quit prompt
+@enduml
