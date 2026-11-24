@@ -1,0 +1,16 @@
+@startuml c4-container
+!include <C4/C4_Container>
+title Container Diagram - Minesweeper
+
+Person(player, "Player")
+
+System_Boundary(ms, "Minesweeper") {
+  Container(cli, "Minesweeper CLI", "Python 3.12", "Entry point and game loop; renders output, reads commands, wires adapters to the domain")
+  Container(core, "Domain Core", "Python 3.12 library", "Board generation, hints, and game rules as pure logic; no I/O")
+  ContainerDb(store, "Score Store", "JSON file", "Optional best-time records per difficulty")
+}
+
+Rel(player, cli, "Types commands", "stdin")
+Rel(cli, core, "Invokes domain logic", "function calls")
+Rel(cli, store, "Reads/writes best times", "JSON file")
+@enduml

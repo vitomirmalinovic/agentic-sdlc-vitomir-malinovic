@@ -1,0 +1,11 @@
+@startuml c4-context
+!include <C4/C4_Context>
+title System Context - Minesweeper
+
+Person(player, "Player", "Plays Minesweeper in the terminal")
+System(ms, "Minesweeper", "Python CLI game: board generation, hints, reveal/flag, win/lose")
+System_Ext(fs, "Local file system", "Stores optional high scores as JSON")
+
+Rel(player, ms, "Reveals and flags cells", "keyboard")
+Rel(ms, fs, "Reads/writes scores", "JSON file")
+@enduml

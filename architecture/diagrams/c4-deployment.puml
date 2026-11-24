@@ -1,0 +1,20 @@
+@startuml c4-deployment
+!include <C4/C4_Deployment>
+title Deployment View - Minesweeper
+
+Person(player, "Player", "Runs the game locally")
+
+Deployment_Node(ws, "Player Workstation", "Linux / macOS", "The single machine that runs the game") {
+  Deployment_Node(py, "Python 3.12 Runtime", "CPython 3.12", "Interprets the application") {
+    Container(cli, "Minesweeper CLI", "Python 3.12", "Entry point and game loop")
+    Container(core, "Domain Core", "Python 3.12 library", "Board + Game pure logic")
+  }
+  Deployment_Node(fs, "Local File System", "OS file system", "Holds the optional scores file") {
+    ContainerDb(store, "Score Store", "JSON file", "Best-time records")
+  }
+}
+
+Rel(player, cli, "Runs", "terminal")
+Rel(cli, core, "Loads and invokes", "in-process")
+Rel(cli, store, "Reads/writes", "file I/O")
+@enduml

@@ -1,0 +1,17 @@
+@startuml c4-component-cli
+!include <C4/C4_Component>
+title Component Diagram - Minesweeper CLI
+
+Container_Boundary(cli, "Minesweeper CLI") {
+  Component(parser, "CommandParser", "Python module", "Parses stdin lines into game actions (reveal, flag, restart, quit, config)")
+  Component(renderer, "Renderer", "Python module", "Renders game state to a text grid for stdout")
+  Component(loop, "GameLoop", "Python module", "Orchestrates the loop: read command, apply action, render, repeat")
+  Component(scores, "ScoreAdapter", "Python module", "Reads/writes best-time records to the JSON store (storage port impl)")
+}
+
+Component_Ext(engine, "GameEngine", "Python module", "In Domain Core: applies reveal/flag actions")
+Rel(parser, loop, "Returns parsed actions")
+Rel(loop, renderer, "Asks to render state")
+Rel(loop, scores, "Reads/writes records on win")
+Rel(loop, engine, "Calls to apply actions")
+@enduml

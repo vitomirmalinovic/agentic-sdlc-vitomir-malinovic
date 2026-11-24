@@ -1,0 +1,30 @@
+@startuml seq-win-persist
+title Scenario: Win and Persist Best Time
+
+actor Player
+participant "GameLoop" as Loop
+participant "CommandParser" as Parser
+participant "GameEngine" as Engine
+participant "ScoreAdapter" as Scores
+participant "Renderer" as Render
+
+Player -> Loop: "r 2 2" (last safe cell)
+Loop -> Parser: parse("r 2 2")
+Parser --> Loop: Reveal(2, 2)
+Loop -> Engine: apply(GameState, Reveal(2, 2))
+note right of Engine
+  all non-mine cells revealed
+  status -> won
+end note
+Engine --> Loop: next GameState (won)
+Loop -> Loop: stop timer, compute elapsed
+Loop -> Scores: read_records(difficulty)
+Scores --> Loop: best times (or none)
+alt elapsed < best (or no record)
+  Loop -> Scores: write_record(difficulty, elapsed)
+  Scores --> Loop: ok
+end
+Loop -> Render: render(GameState)
+Render --> Loop: text grid
+Loop -> Player: "You won" + time + new-record flag + restart/quit
+@enduml

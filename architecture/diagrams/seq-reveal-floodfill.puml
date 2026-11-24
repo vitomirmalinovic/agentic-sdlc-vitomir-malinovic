@@ -1,0 +1,23 @@
+@startuml seq-reveal-floodfill
+title Scenario: Reveal a Safe Cell with Flood-Fill
+
+actor Player
+participant "GameLoop" as Loop
+participant "CommandParser" as Parser
+participant "GameEngine" as Engine
+participant "Renderer" as Render
+
+Player -> Loop: "r 3 4"
+Loop -> Parser: parse("r 3 4")
+Parser --> Loop: Reveal(3, 4)
+Loop -> Engine: apply(GameState, Reveal(3, 4))
+note right of Engine
+  cell is safe, hint count == 0
+  flood-fill cascades to neighbours
+  until frontier cells have count > 0
+end note
+Engine --> Loop: next GameState (playing, many revealed)
+Loop -> Render: render(GameState)
+Render --> Loop: text grid
+Loop -> Player: display board + prompt
+@enduml

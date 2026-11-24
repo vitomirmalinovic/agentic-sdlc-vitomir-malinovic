@@ -1,0 +1,19 @@
+@startuml seq-start-game
+title Scenario: Start a New Game
+
+actor Player
+participant "GameLoop" as Loop
+participant "BoardGenerator" as Gen
+participant "HintComputer" as Hints
+participant "Renderer" as Render
+
+Player -> Loop: start(rows, cols, mines, seed)
+Loop -> Gen: generate(rows, cols, mines, Random(seed))
+Gen --> Loop: mine layout (Grid)
+Loop -> Hints: compute(mine layout)
+Hints --> Loop: hint grid (Grid)
+Loop -> Loop: build initial GameState (all hidden, playing)
+Loop -> Render: render(GameState)
+Render --> Loop: text grid
+Loop -> Player: display board + prompt
+@enduml

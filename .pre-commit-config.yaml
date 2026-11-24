@@ -1,3 +1,4 @@
+exclude: '\.svg$'
 repos:
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -53,3 +54,13 @@ repos:
         language: system
         stages: [commit-msg]
         always_run: true
+
+  # PlantUML -> SVG
+  - repo: local
+    hooks:
+      - id: plantuml-validation
+        name: PlantUML Validation
+        entry: bash scripts/hooks/validate-plantuml.sh
+        language: system
+        files: '\.puml$'
+        pass_filenames: false
