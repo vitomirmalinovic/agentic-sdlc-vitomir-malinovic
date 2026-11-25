@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'feature/**', 'fix/**']
+    paths:
+      - 'minesweeper/**'
+      - 'tests/**'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'requirements.txt'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'minesweeper/**'
+      - 'tests/**'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'requirements.txt'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t kata-tests .
+
+      - name: Verify Docker image was built
+        run: docker image inspect kata-tests --format 'Image {{.Id}} built OK'
+
+      - name: Run tests inside container
+        run: docker run --rm kata-tests

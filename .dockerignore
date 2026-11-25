@@ -1,0 +1,10 @@
+.git
+.venv
+.kiro
+.github
+architecture
+docs
+scripts
+**/__pycache__
+**/*.pyc
+.pytest_cache
