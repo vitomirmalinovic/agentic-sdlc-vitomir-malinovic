@@ -1,0 +1,2 @@
+# Test-time dependencies only. The game itself uses the standard library (constraint T2/T3).
+pytest==8.3.4

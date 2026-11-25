@@ -38,6 +38,7 @@ repos:
       - id: bandit
         args: [-c, pyproject.toml]
         additional_dependencies: ["bandit[toml]"]
+        exclude: ^tests/
 
   # Secret detection
   - repo: https://github.com/Yelp/detect-secrets
@@ -64,3 +65,13 @@ repos:
         language: system
         files: '\.puml$'
         pass_filenames: false
+
+  # Build Docker image and run tests before commit
+  - repo: local
+    hooks:
+      - id: docker-test
+        name: Docker build and test
+        entry: bash scripts/hooks/docker-test.sh
+        language: system
+        pass_filenames: false
+        always_run: true

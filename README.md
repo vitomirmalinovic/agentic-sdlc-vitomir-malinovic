@@ -4,10 +4,10 @@ In this course I build AI agents for each phase of the software development life
 
 ## Course Progress
 
-- [ ] Module 1: Git — workflow agent
+- [x] Module 1: Git — workflow agent
 - [x] Module 2: Software Architecture — arc42 design agent
 - [x] Module 3: Software Requirements — user story derivation agent
-- [ ] Module 4: CI/CD — deployment pipeline agent
+- [x] Module 4: CI/CD — deployment pipeline agent
 - [ ] Module 5: TDD/BDD — multi-agent testing system
 - [ ] Module 6: Final Project — team software factory
 
@@ -35,3 +35,22 @@ users, and building blocks). Output lands in [docs/user-stories/](docs/user-stor
   list, Pareto progress, and traceability
 - `{domain}.md` — one story bundle file per domain (Original + FE + BE + INFRA, GIVEN-WHEN-THEN),
   e.g. [board.md](docs/user-stories/board.md) and [game.md](docs/user-stories/game.md)
+
+## CI/CD
+
+The CI/CD agent ([.kiro/agents/cicd-agent.json](.kiro/agents/cicd-agent.json)) generates the
+[Dockerfile](Dockerfile) and the GitHub Actions workflow
+[.github/workflows/ci.yml](.github/workflows/ci.yml). Every push to `main`, `feature/**` or
+`fix/**` and every PR to `main` that touches `minesweeper/`, `tests/`, `Dockerfile`,
+`requirements.txt` or the workflow builds the image and runs pytest inside it. There is no cloud
+deployment (local single-user game, see [Deployment View](architecture/07-deployment-view.md)).
+
+```bash
+kiro-cli --tui --agent cicd-agent
+docker build -t kata-tests .     # build the test image
+docker run --rm kata-tests       # run the tests in the container
+```
+
+The `docker-test` pre-commit hook ([scripts/hooks/docker-test.sh](scripts/hooks/docker-test.sh))
+runs the same build and tests before each commit, and skips with a warning when Docker is not
+installed.
